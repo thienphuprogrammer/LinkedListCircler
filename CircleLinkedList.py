@@ -18,7 +18,6 @@ class CircleLinkedList:
     def get(self, index):
         if self.isEmpty():
             return None
-
         current = self.last_node.next
         for i in range(index):
             current = current.next
@@ -71,18 +70,24 @@ class CircleLinkedList:
     def deleteFirst(self):
         if self.last_node is None:
             return
-        self.last_node = self.last_node.next.next
+        if self.last_node.next is self.last_node:
+            self.last_node = None
+        else:
+            self.last_node.next = self.last_node.next.next
         self.size -= 1
         return
 
     def deleteLast(self):
         if self.last_node is None:
             return
-        current = self.last_node.next
-        while current.next is not self.last_node:
-            current = current.next
-        current.next = self.last_node.next
-        self.last_node = current
+        if self.last_node.next is self.last_node:
+            self.last_node = None
+        else:
+            current = self.last_node.next
+            while current.next is not self.last_node:
+                current = current.next
+            current.next = self.last_node.next
+            self.last_node = current
         self.size -= 1
         return
 
@@ -90,8 +95,9 @@ class CircleLinkedList:
         if index < 0:
             print("Invalid index")
             return
-        if index >= self.size:
+        elif index >= self.size:
             self.deleteLast()
+            return
         current = self.last_node.next
         previous = None
         for i in range(index):
@@ -142,6 +148,10 @@ class CircleLinkedList:
         return
 
     def display(self):
+        if self.isEmpty():
+            print("List is empty")
+            return
+
         current = self.last_node.next
         while True:
             print(current.element, end=" ")
