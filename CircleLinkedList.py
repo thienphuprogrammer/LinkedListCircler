@@ -33,29 +33,12 @@ class CircleLinkedList:
             current = current.next
         return -1
 
-    def remove(self, item):
+    def deleteAfter(self, id_student):
         current = self.last_node.next
         previous = None
         found = False
         while current is not None and not found:
-            if current.element == item:
-                found = True
-            else:
-                previous = current
-                current = current.next
-        if previous is None:
-            self.last_node = current
-        else:
-            previous.next = current.next
-        self.size -= 1
-        return found
-
-    def deleteAfter(self, value):
-        current = self.last_node.next
-        previous = None
-        found = False
-        while current is not None and not found:
-            if current.element == value:
+            if current.element.get_id() == id_student:
                 found = True
             else:
                 previous = current
@@ -147,18 +130,72 @@ class CircleLinkedList:
         self.size += 1
         return
 
+    def insertAfter(self, id_student, item):
+        current = self.last_node.next
+        previous = None
+        found = False
+        while current is not None and not found:
+            if current.element.get_id() == id_student:
+                found = True
+            else:
+                previous = current
+                current = current.next
+        if previous is None:
+            self.last_node = current
+        else:
+            previous.next = Node(item, current)
+        self.size += 1
+        return
+
+    def searchById(self, id_student):
+        student = None
+        current = self.last_node.next
+        while True:
+            if current.element.get_id() == id_student:
+                student = current.element
+                break
+            if current is self.last_node:
+                break
+
+            current = current.next
+
+        return student
+
+    def searchByName(self, name):
+        current = self.last_node.next
+        student = None
+        while True:
+            if current.element.name == name:
+                student = current.element
+            if current is self.last_node:
+                break
+            current = current.next
+        return student
+
     def display(self):
         if self.isEmpty():
             print("List is empty")
             return
-
         current = self.last_node.next
         while True:
-            print(current.element, end=" ")
+            print("id: ", current.element.id_student, end=", ")
+            print("name: ", current.element.name, end=", ")
+            print("age: ", current.element.age, end=", ")
+            print("major: ", current.element.major, end=", ")
+            print("gpa: ", current.element.gpa)
             current = current.next
-            if current != self.last_node.next:
-                print("->", end=" ")
-            else:
+            if current is self.last_node.next:
                 break
-        print()
         return
+
+    def __len__(self):
+        return self.size
+
+    def __str__(self):
+        current = self.last_node.next
+        string = ""
+        while current is not self.last_node:
+            string += str(current.element) + " -> "
+            current = current.next
+        string += str(current.element)
+        return string

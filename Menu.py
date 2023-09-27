@@ -1,17 +1,20 @@
 from enum import Enum
 from CircleLinkedList import CircleLinkedList
+from Student import Student
 
 
 class MenuChoice(Enum):
     EXIT = 0
-    INSERT_FIRST = 1
-    INSERT_LAST = 2
-    INSERT_AT_INDEX = 3
-    DELETE_FIRST = 4
-    DELETE_LAST = 5
-    DELETE_AFTER = 6
-    DELETE_AT_INDEX = 7
-    SHOW_INFORMATION = 8
+    INSERT_FIRST_STUDENT = 1
+    INSERT_LAST_STUDENT = 2
+    INSERT_AT_INDEX_STUDENT = 3
+    INSERT_AFTER_STUDENT = 4
+    DELETE_FIRST_STUDENT = 5
+    DELETE_LAST_STUDENT = 6
+    DELETE_AFTER_STUDENT = 7
+    DELETE_AT_INDEX_STUDENT = 8
+    SEARCH_STUDENT_BY_ID = 9
+    SEARCH_STUDENT_BY_NAME = 10
 
 
 class Menu:
@@ -21,10 +24,11 @@ class Menu:
     def showMenu(self):
         """ Shows the menu to the user. """
         running = True
-        while True:
+        while running:
             try:
-                print("My LinkedList: ", end='')
+                print("-" * 30 + "My Students List: " + "-" * 30)
                 self.list.display()
+                print("-" * 78)
 
                 print("-" * 20 + " MENU " + "-" * 20)
                 for choice in MenuChoice:
@@ -32,31 +36,23 @@ class Menu:
                             30 - len(choice.name)) + "|")
                 print("-" * 46)
                 choice = self.getChoiceFromUser()
-
+                switcher = {
+                    MenuChoice.INSERT_FIRST_STUDENT.value: self.handleInsertFirst,
+                    MenuChoice.INSERT_LAST_STUDENT.value: self.handleInsertLast,
+                    MenuChoice.INSERT_AT_INDEX_STUDENT.value: self.handleAtIndex,
+                    MenuChoice.INSERT_AFTER_STUDENT.value: self.handleInsertAfter,
+                    MenuChoice.DELETE_FIRST_STUDENT.value: self.handleDeleteFirst,
+                    MenuChoice.DELETE_LAST_STUDENT.value: self.handleDeleteLast,
+                    MenuChoice.DELETE_AFTER_STUDENT.value: self.handleDeleteAfter,
+                    MenuChoice.DELETE_AT_INDEX_STUDENT.value: self.handleDeleteAtIndex,
+                    MenuChoice.SEARCH_STUDENT_BY_ID.value: self.handleSearchById,
+                    MenuChoice.SEARCH_STUDENT_BY_NAME.value: self.handleSearchByName
+                }
                 if choice == MenuChoice.EXIT.value:
-                    print("Exitted program!!!!")
                     running = False
-                elif choice == MenuChoice.INSERT_FIRST.value:
-                    self.handleInsertFirst()
-                    pass
-                elif choice == MenuChoice.INSERT_LAST.value:
-                    self.handleInsertLast()
-                    pass
-                elif choice == MenuChoice.INSERT_AT_INDEX.value:
-                    self.handleAtIndex()
-                    pass
-                elif choice == MenuChoice.DELETE_FIRST.value:
-                    self.handleDeleteFirst()
-                    pass
-                elif choice == MenuChoice.DELETE_LAST.value:
-                    self.handleDeleteLast()
-                    pass
-                elif choice == MenuChoice.DELETE_AFTER.value:
-                    self.handleDeleteAfter()
-                    pass
-                elif choice == MenuChoice.DELETE_AT_INDEX.value:
-                    self.handleDeleteAtIndex()
-                    pass
+                elif choice < (MenuChoice.__sizeof__(MenuChoice)):
+                    switcher.get(choice)()
+
             except ValueError:
                 print("Invalid choice. Please enter a valid choice.")
 
@@ -70,41 +66,57 @@ class Menu:
                 print("Invalid choice. Please enter a valid choice.")
 
     def handleInsertFirst(self):
-        print("Input value: ", end='')
-        value = int(input())
-        self.list.insertFirst(value)
-        pass
+        name = input("Enter student name: ")
+        age = int(input("Enter student age: "))
+        major = input("Enter student major: ")
+        gpa = float(input("Enter student GPA: "))
+        id_student = len(self.list)
+        self.list.insertFirst(Student( id_student, name, age, major, gpa))
 
     def handleInsertLast(self):
-        print("Input value: ", end='')
-        value = int(input())
-        self.list.insertLast(value)
-        pass
+        name = input("Enter student name: ")
+        age = int(input("Enter student age: "))
+        major = input("Enter student major: ")
+        gpa = float(input("Enter student GPA: "))
+        id_student = len(self.list)
+        self.list.insertLast(Student(id_student, name, age, major, gpa))
 
     def handleAtIndex(self):
-        print("Input value: ", end='')
-        value = int(input())
-        print("Input index: ", end='')
-        index = int(input())
-        self.list.insertAtIndex(index, value)
-        pass
+        index = int(input("Enter index: "))
+        name = input("Enter student name: ")
+        age = int(input("Enter student age: "))
+        major = input("Enter student major: ")
+        gpa = float(input("Enter student GPA: "))
+        id_student = len(self.list)
+        self.list.insertAtIndex(index, Student(id_student, name, age, major, gpa))
+
+    def handleInsertAfter(self):
+        value = input("Enter id student: ")
+        name = input("Enter student name: ")
+        age = int(input("Enter student age: "))
+        major = input("Enter student major: ")
+        gpa = float(input("Enter student GPA: "))
+        id_student = len(self.list)
+        self.list.insertAfter(value, Student(id_student, name, age, major, gpa))
 
     def handleDeleteFirst(self):
         self.list.deleteFirst()
-        pass
 
     def handleDeleteLast(self):
         self.list.deleteLast()
-        pass
 
     def handleDeleteAfter(self):
-        print("Input value: ", end='')
-        value = int(input())
-        self.list.deleteAfter(value)
-        pass
+        id_student = input("Enter id student: ")
+        self.list.deleteAfter(id_student)
 
     def handleDeleteAtIndex(self):
-        print("Input index: ", end='')
-        index = int(input())
+        index = int(input("Enter index: "))
         self.list.deleteAtIndex(index)
-        pass
+
+    def handleSearchById(self):
+        id_student = int(input("Enter id student: "))
+        self.list.searchById(id_student)
+
+    def handleSearchByName(self):
+        name_student = input("Enter name student: ")
+        self.list.searchByName(name_student)
