@@ -1,12 +1,13 @@
-class CircleLinkedList:
-    def __init__(self):
-        self.head = None
-        self.size = 0
 
 class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
+
+class CircleLinkedList:
+    def __init__(self):
+        self.head = None
+        self.size = 0
 
     def isEmpty(self):
         return self.size == 0
